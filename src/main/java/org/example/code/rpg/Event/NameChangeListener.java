@@ -24,8 +24,8 @@ public class NameChangeListener implements Listener {
 
         if (item != null && item.getType() == Material.PAPER && item.hasItemMeta()) {
             ItemMeta meta = item.getItemMeta();
-            if (meta != null && ChatColor.stripColor(meta.getDisplayName()).equals("이름 변경권")) {
-                player.sendMessage(ChatColor.GREEN + "변경할 이름을 채팅으로 입력해주세요!");
+            if (meta != null && ChatColor.stripColor(meta.getDisplayName()).equals("Name Change Ticket")) {
+                player.sendMessage(ChatColor.GREEN + "Please enter the new name in the chat!");
                 plugin.getNameChangeManager().addPlayerToNameChangeList(player);
                 event.setCancelled(true);
             }

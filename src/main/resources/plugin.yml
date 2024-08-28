@@ -4,22 +4,22 @@ main: org.example.code.rpg.RPG
 api-version: '1.20'
 load: STARTUP
 commands:
-  광부:
-    description: 광부 n차 전직 책을 받습니다.
-    usage: /광부 <1~4차>
+  miner:
+    description: Receive the Miner nth class job change book.
+    usage: /miner <1st~4th class>
 
-  돈:
-    description: 현재 잔액을 확인합니다.
-    usage: /돈
+  money:
+    description: Check your current balance.
+    usage: /money
 
-  도움말:
-    description: MinerSurvival 플러그인의 도움말을 확인합니다.
-    usage: /도움말
+  mhelp:
+    description: View the help for the MinerSurvival plugin.
+    usage: /mhelp
 
-  메뉴:
-    description: 다양한 기능이 있는 메뉴를 오픈합니다.
-    usage: /메뉴
+  menu:
+    description: Open the menu with various functions.
+    usage: /menu
 
-  이름변경권:
-    description: 이름 변경권을 받습니다.
-    usage: /이름변경권
+  namechange:
+    description: Receive a name change token.
+    usage: /namechange

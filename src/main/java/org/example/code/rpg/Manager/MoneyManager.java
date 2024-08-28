@@ -13,30 +13,30 @@ public class MoneyManager {
         this.config = plugin.getConfig();
     }
 
-    // 플레이어 돈 가져오기
+    // Get player's balance
     public int getBalance(Player player) {
         return config.getInt("users." + player.getUniqueId().toString() + ".economy", 0); // Changed to int
     }
 
-    // 플레이어 돈 설정
+    // Set player's balance
     public void setBalance(Player player, int amount) {
         config.set("users." + player.getUniqueId().toString() + ".economy", amount);
         plugin.saveConfig();
     }
 
-    // 플레이어 돈 추가
+    // Add to player's balance
     public void addBalance(Player player, int amount) {
         setBalance(player, getBalance(player) + amount);
     }
 
-    // 플레이어 돈 빼기
+    // Subtract from player's balance
     public void subtractBalance(Player player, int amount) {
         int currentBalance = getBalance(player);
         if (currentBalance >= amount) {
             setBalance(player, currentBalance - amount);
         } else {
-            // 잔액보다 더 많은 금액을 빼려고 할 때
-            setBalance(player, 0); // 잔액이 음수가 되지 않도록 처리
+            // When attempting to subtract more than the balance
+            setBalance(player, 0); // Ensure the balance does not become negative
         }
     }
 }

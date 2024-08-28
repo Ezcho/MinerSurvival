@@ -44,7 +44,7 @@ public class RightClickListener implements Listener {
                 // 배열의 길이 확인하기 (split으로 나눈 건 배열로 인정 안됨. 배열 길이 4로 오해하지 말자!)
                 if (share.length == 3) {
                     plugin.getJobConfig().jobCreate(player, share[1], share[2]);
-                    player.sendMessage(ChatColor.translateAlternateColorCodes('&', share[1] + " " + share[2] + "&r입니다!"));
+                    player.sendMessage(ChatColor.translateAlternateColorCodes('&', share[1] + " " + share[2] + "&!"));
                     updatePlayerScoreboard(player);
                     plugin.saveConfig();
 

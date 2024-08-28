@@ -10,51 +10,51 @@ import org.example.code.rpg.RPG;
 public class PluginHelpCommand implements CommandExecutor {
     private RPG plugin;
 
-    // 생성자를 통해 플러그인을 주입받습니다.
+    // Inject the plugin via constructor
     public PluginHelpCommand(RPG plugin) {
         this.plugin = plugin;
     }
 
-    // 도움말 메시지를 상수로 정의합니다.
+    // Define the help message as a constant
     private static final String HELP_MESSAGE = ChatColor.translateAlternateColorCodes('&',
-            "MinerSurvival 플러그인은 '광부로 살아남기' 플러그인입니다.\n" +
-                    "이 플러그인에서 사용할 수 있는 명령어는 다음과 같습니다.\n" +
+            "The MinerSurvival plugin is a 'Survive as a Miner' plugin.\n" +
+                    "Here are the commands available in this plugin:\n" +
                     " \n" +
-                    "- 사용 가능한 일반 명령어 목록 -\n\n" +
+                    "- List of available general commands -\n\n" +
                     " \n" +
-                    "&e/돈\n&f: 현재 플레이어의 잔액을 확인합니다.\n" +
+                    "&e/money\n&f: Check your current balance.\n" +
                     " \n" +
-                    "&e/돈 송금 (플레이어 닉네임) (송금할 금액)\n&f: 해당 플레이어에게 돈을 송금합니다.\n" +
+                    "&e/money send (player name) (amount)\n&f: Send money to the specified player.\n" +
                     " \n" +
-                    "&e/메뉴\n&f: 다양한 기능이 있는 메뉴를 오픈합니다.\n" +
-                    " \n" +
-                    " \n" +
-                    "- 사용 가능한 op 명령어 목록 -\n\n" +
-                    " \n" +
-                    "&e/돈 입금 (플레이어 닉네임) (입금할 금액)\n&f: 해당 플레이어에게 무한의 돈이 있는 계좌에서 돈을 입금합니다.(op 명령어)\n" +
-                    " \n" +
-                    "&e/돈 출금 (플레이어 닉네임) (출금할 금액)\n&f: 해당 플레이어의 잔액에서 돈을 출금합니다.(op 명령어)\n" +
-                    " \n" +
-                    "&e/광부 (1~4차)\n&f: 광부 전직책을 지급합니다.(op 명령어)\n" +
-                    " \n" +
-                    "&e/이름변경권\n&f: 이름변경권을 지급합니다.(op 명령어)\n" +
+                    "&e/menu\n&f: Open the menu with various functions.\n" +
                     " \n" +
                     " \n" +
-                    "&e버그는 Discord : 이케#9461으로 연락 주세요."
+                    "- List of available OP commands -\n\n" +
+                    " \n" +
+                    "&e/money deposit (player name) (amount)\n&f: Deposit money into the player's account from an infinite money account. (OP command)\n" +
+                    " \n" +
+                    "&e/money withdraw (player name) (amount)\n&f: Withdraw money from the player's balance. (OP command)\n" +
+                    " \n" +
+                    "&e/miner (1st~4th class)\n&f: Give the miner job change book. (OP command)\n" +
+                    " \n" +
+                    "&e/namechange\n&f: Give a name change token. (OP command)\n" +
+                    " \n" +
+                    " \n" +
+                    "&eFor bugs, please contact on Discord: 이케#9461."
     );
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String s, String[] args) {
-        // 명령어를 플레이어가 호출했는지 확인합니다.
+        // Check if the command was called by a player
         if (!(sender instanceof Player)) {
-            sender.sendMessage(ChatColor.RED + "플레이어만 사용 가능한 명령어 입니다.");
+            sender.sendMessage(ChatColor.RED + "This command can only be used by players.");
             return true;
         }
 
-        // '도움말' 명령어인지와 인자가 없는지를 확인합니다.
-        if (command.getName().equalsIgnoreCase("도움말") && args.length == 0) {
+        // Check if the command is 'help' and has no arguments
+        if (command.getName().equalsIgnoreCase("mhelp") && args.length == 0) {
             Player player = (Player) sender;
-            player.sendMessage(HELP_MESSAGE);  // 상수로 정의한 메시지를 보냅니다.
+            player.sendMessage(HELP_MESSAGE);  // Send the message defined as a constant
         }
         return true;
     }

@@ -24,21 +24,21 @@ public class NameChangeTokenCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player)) {
-            sender.sendMessage(ChatColor.RED + "플레이어만 사용 가능한 명령어 입니다.");
+            sender.sendMessage(ChatColor.RED + "This command can only be used by players.");
             return true;
         }
 
         Player player = (Player) sender;
 
-        // 플레이어가 OP인지 확인
+        // Check if the player is OP
         if (!player.isOp()) {
-            player.sendMessage(ChatColor.RED + "이 명령어를 사용할 권한이 없습니다.");
+            player.sendMessage(ChatColor.RED + "You do not have permission to use this command.");
             return true;
         }
 
         ItemStack nameChangeToken = createNameChangeToken();
         player.getInventory().addItem(nameChangeToken);
-        player.sendMessage(ChatColor.GREEN + "이름 변경권을 받았습니다!");
+        player.sendMessage(ChatColor.GREEN + "You have received a Name Change Token!");
 
         return true;
     }
@@ -47,8 +47,8 @@ public class NameChangeTokenCommand implements CommandExecutor {
         ItemStack item = new ItemStack(Material.PAPER);
         ItemMeta meta = item.getItemMeta();
         if (meta != null) {
-            meta.setDisplayName(ChatColor.GOLD + "" + ChatColor.BOLD + "이름 변경권");
-            meta.setLore(Collections.singletonList(ChatColor.RED + "변경한 이름은 다시 변경할 수 없습니다."));
+            meta.setDisplayName(ChatColor.GOLD + "" + ChatColor.BOLD + "Name Change Token");
+            meta.setLore(Collections.singletonList(ChatColor.RED + "The changed name cannot be changed again."));
             meta.addEnchant(Enchantment.DURABILITY, 1, true);
             meta.addItemFlags(ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_ATTRIBUTES);
             item.setItemMeta(meta);

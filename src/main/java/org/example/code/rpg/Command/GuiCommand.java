@@ -18,7 +18,7 @@ public class GuiCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player)) {
-            sender.sendMessage(ChatColor.RED + "플레이어만 사용 가능한 명령어 입니다.");
+            sender.sendMessage(ChatColor.RED + "This command is available only to players.");
             return true;
         }
         Player player = (Player) sender;

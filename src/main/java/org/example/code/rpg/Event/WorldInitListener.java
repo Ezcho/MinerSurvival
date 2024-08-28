@@ -40,7 +40,7 @@ public class WorldInitListener implements Listener {
 
     private void locateAndSaveStructureLocation(World world) {
         if (world == null) {
-            plugin.getLogger().warning("월드를 찾을 수 없습니다.");
+            plugin.getLogger().warning("World not found.");
             return;
         }
 

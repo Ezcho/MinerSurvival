@@ -49,32 +49,32 @@ public class PlayerJoinListener implements Listener {
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
 
-        // config에서 플레이어의 사용자 지정 이름 가져오기
+        // Retrieve the player's custom name from the config
         FileConfiguration config = plugin.getConfig();
         String playerName = config.getString("users." + player.getUniqueId().toString() + ".name", player.getName());
 
-        // 사용자 지정 이름을 설정했는지 확인
+        // Check if a custom name is set
         if (playerName == null || playerName.isEmpty()) {
-            playerName = player.getName(); // 마인크래프트 고유의 닉네임
+            playerName = player.getName(); // Minecraft's default nickname
         }
 
-        // 이름 변경하기(플레이어 위에 뜨는 마인크래프트 고유 닉네임, Tab누르면 뜨는 플레이어 목록 리스트에 뜨는 닉네임)
+        // Change the name (both the display name above the player's head and the name in the player list when pressing Tab)
         player.setDisplayName(playerName);
         player.setPlayerListName(playerName);
 
         event.setJoinMessage(ChatColor.GREEN + "[+] " + ChatColor.WHITE + playerName);
 
-        // 플레이어가 이전에 접속한 적이 있는지 확인 -> hasPlayedBefore() 메서드
+        // Check if the player has joined before -> hasPlayedBefore() method
         if (!player.hasPlayedBefore()) {
-            player.sendMessage("서버에 들어오신 걸 환영합니다! '/도움말'을 통해 명령어를 확인할 수 있습니다!");
-            moneyManager.setBalance(event.getPlayer(), 1000); // 처음 접속할 때 1000원 지급
-            plugin.getJobConfig().jobCreate(player, "직업 없음", " "); // 직업, 직업 레벨 기본값 설정
+            player.sendMessage("Welcome to the server! Use '/help' to check available commands!");
+            moneyManager.setBalance(event.getPlayer(), 1000); // Give 1000 coins on first join
+            plugin.getJobConfig().jobCreate(player, "No Job", " "); // Set default job and job level
             giveNameChangeTicket(player);
         }
 
-        BossBar bossBar = getServer().createBossBar("산소 고갈까지 남은 시간 : 10분 00초", BarColor.GREEN, BarStyle.SOLID);
+        BossBar bossBar = getServer().createBossBar("Time until oxygen depletion: 10 minutes 00 seconds", BarColor.GREEN, BarStyle.SOLID);
         bossBar.addPlayer(player);
-        bossBar.setProgress(1.0); // 진행률을 100%로 설정
+        bossBar.setProgress(1.0); // Set progress to 100%
         bossBar.setVisible(false);
         playerBossBars.put(player.getUniqueId(), bossBar);
         playerO2.put(player.getUniqueId(), initialTime);
@@ -88,11 +88,11 @@ public class PlayerJoinListener implements Listener {
         if (bossBar != null) {
             bossBar.removeAll();
         }
-        // config에서 플레이어의 사용자 지정 이름 가져오기
+        // Retrieve the player's custom name from the config
         FileConfiguration config = plugin.getConfig();
         String playerName = config.getString("users." + player.getUniqueId().toString() + ".name", player.getName());
 
-        // 이름 변경하기(플레이어 위에 뜨는 마인크래프트 고유 닉네임, Tab누르면 뜨는 플레이어 목록 리스트에 뜨는 닉네임)
+        // Change the name (both the display name above the player's head and the name in the player list when pressing Tab)
         player.setDisplayName(playerName);
         player.setPlayerListName(playerName);
         event.setQuitMessage(ChatColor.RED + "[-] " + ChatColor.WHITE + playerName);

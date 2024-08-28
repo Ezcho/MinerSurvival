@@ -24,7 +24,7 @@ public class UnableInstallBedListener implements Listener {
             if (event.getBlock().getLocation().getY() <= 60) {
                 // 침대 설치 못하게 이벤트 취소
                 event.setCancelled(true);
-                event.getPlayer().sendMessage(ChatColor.RED + "침대는 Y좌표 60이하에 설치할 수 없습니다!");
+                event.getPlayer().sendMessage(ChatColor.RED + "The bed cannot be installed below Y coordinate 60!");
             }
         }
     }

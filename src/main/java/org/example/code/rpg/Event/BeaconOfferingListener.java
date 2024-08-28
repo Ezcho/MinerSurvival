@@ -22,7 +22,7 @@ import java.util.Set;
 public class BeaconOfferingListener implements Listener {
 
     private final Plugin plugin;
-    private final JobConfigManager jobConfigManager; // JobConfigManager 인스턴스 추가
+    private final JobConfigManager jobConfigManager; // Added JobConfigManager instance
     private final HashMap<Block, Set<Material>> beaconOfferings = new HashMap<>();
     private final Set<Material> requiredOfferings = Set.of(
             Material.COAL, Material.COPPER_INGOT, Material.IRON_INGOT, Material.GOLD_INGOT,
@@ -34,22 +34,22 @@ public class BeaconOfferingListener implements Listener {
 
     public BeaconOfferingListener(Plugin plugin, JobConfigManager jobConfigManager) {
         this.plugin = plugin;
-        this.jobConfigManager = jobConfigManager; // JobConfigManager 초기화
+        this.jobConfigManager = jobConfigManager; // Initialize JobConfigManager
         initializeMaterialNames();
     }
 
     private void initializeMaterialNames() {
-        materialNames.put(Material.COAL, "석탄");
-        materialNames.put(Material.COPPER_INGOT, "구리 주괴");
-        materialNames.put(Material.IRON_INGOT, "철 주괴");
-        materialNames.put(Material.GOLD_INGOT, "금 주괴");
-        materialNames.put(Material.REDSTONE, "레드스톤");
-        materialNames.put(Material.LAPIS_LAZULI, "청금석");
-        materialNames.put(Material.EMERALD, "에메랄드");
-        materialNames.put(Material.DIAMOND, "다이아몬드");
-        materialNames.put(Material.AMETHYST_SHARD, "자수정 조각");
-        materialNames.put(Material.QUARTZ, "석영");
-        materialNames.put(Material.NETHERITE_INGOT, "네더라이트 주괴");
+        materialNames.put(Material.COAL, "Coal");
+        materialNames.put(Material.COPPER_INGOT, "Copper Ingot");
+        materialNames.put(Material.IRON_INGOT, "Iron Ingot");
+        materialNames.put(Material.GOLD_INGOT, "Gold Ingot");
+        materialNames.put(Material.REDSTONE, "Redstone");
+        materialNames.put(Material.LAPIS_LAZULI, "Lapis Lazuli");
+        materialNames.put(Material.EMERALD, "Emerald");
+        materialNames.put(Material.DIAMOND, "Diamond");
+        materialNames.put(Material.AMETHYST_SHARD, "Amethyst Shard");
+        materialNames.put(Material.QUARTZ, "Quartz");
+        materialNames.put(Material.NETHERITE_INGOT, "Netherite Ingot");
     }
 
     @EventHandler
@@ -65,33 +65,33 @@ public class BeaconOfferingListener implements Listener {
     public void handleBeaconFound(Block beaconBlock) {
         for (Player player : beaconBlock.getWorld().getPlayers()) {
             if (player.getLocation().distance(beaconBlock.getLocation()) < 50) {
-                player.sendMessage("코어가 활성화되었습니다! 공양할 광물을 준비하세요.");
+                player.sendMessage("The core has been activated! Prepare the offering materials.");
                 handleBeaconInteraction(player, beaconBlock);
             }
         }
     }
 
     private void handleBeaconInteraction(Player player, Block beaconBlock) {
-        // 플레이어의 직업과 레벨을 확인
+        // Check the player's job and level
         String jobInfo = jobConfigManager.getPlayerJob(player);
         String[] jobDetails = jobInfo.split(",");
         String job = jobDetails[0];
         String level = jobDetails[1];
-        if (!job.equals("§7§l광부") || !level.equals("4차")) {
-            player.sendMessage(ChatColor.RED + "광부 4차에 도달해야 공양을 시작할 수 있습니다!");
+        if (!job.equals("§7§lMiner") || !level.equals("4th Stage")) {
+            player.sendMessage(ChatColor.RED + "You must reach the 4th stage of Miner to start the offering!");
             return;
         }
 
-        // RPG 클래스에서 단서 상태를 가져오는 인스턴스
+        // Instance to get clue states from the RPG class
         RPG pluginInstance = (RPG) this.plugin;
 
-        // 단서1, 단서2, 단서3 상태 검사
-        boolean clue1 = pluginInstance.loadClueState(player, "단서1");
-        boolean clue2 = pluginInstance.loadClueState(player, "단서2");
-        boolean clue3 = pluginInstance.loadClueState(player, "단서3");
+        // Check the states of Clue1, Clue2, and Clue3
+        boolean clue1 = pluginInstance.loadClueState(player, "Clue1");
+        boolean clue2 = pluginInstance.loadClueState(player, "Clue2");
+        boolean clue3 = pluginInstance.loadClueState(player, "Clue3");
 
         if (!(clue1 && clue2 && clue3)) {
-            player.sendMessage(ChatColor.RED + "모든 단서를 발견해야 공양을 시작할 수 있습니다!");
+            player.sendMessage(ChatColor.RED + "You must find all clues to start the offering!");
             return;
         }
 
@@ -100,23 +100,23 @@ public class BeaconOfferingListener implements Listener {
 
         Set<Material> offerings = beaconOfferings.getOrDefault(beaconBlock, new HashSet<>());
         if (offerings.contains(offeringMaterial)) {
-            player.sendMessage(ChatColor.GREEN + getMaterialName(offeringMaterial) + ChatColor.YELLOW + "은(는) 이미 공양되었습니다. 다른 광물을 사용하세요.");
+            player.sendMessage(ChatColor.GREEN + getMaterialName(offeringMaterial) + ChatColor.YELLOW + " has already been offered. Use another material.");
             return;
         }
 
         if (isValidOfferingItem(offeringMaterial) && itemInHand.getAmount() >= 10) {
             itemInHand.setAmount(itemInHand.getAmount() - 10);
-            player.sendMessage(ChatColor.GREEN + getMaterialName(offeringMaterial) + " 10개" + ChatColor.AQUA + "를 공양 성공했습니다!");
+            player.sendMessage(ChatColor.GREEN + getMaterialName(offeringMaterial) + " 10 units" + ChatColor.AQUA + " successfully offered!");
 
             offerings.add(offeringMaterial);
             beaconOfferings.put(beaconBlock, offerings);
 
-            // 모든 광물 공양이 완료되었는지 확인
+            // Check if all materials have been offered
             if (checkAllOfferingsComplete()) {
                 triggerCompletionSequence(player);
             }
         } else {
-            player.sendMessage("공양할 광물이 부족합니다.");
+            player.sendMessage("You do not have enough materials to offer.");
         }
     }
 
@@ -135,35 +135,35 @@ public class BeaconOfferingListener implements Listener {
 
     private void triggerCompletionSequence(Player player) {
         player.setGameMode(GameMode.SPECTATOR);
-        player.sendTitle("§a모든 이상 현상이", "", 10, 60, 20);
+        player.sendTitle("§aAll anomalies", "", 10, 60, 20);
 
         new BukkitRunnable() {
             @Override
             public void run() {
-                player.sendTitle("§a원상복구 되었습니다.", "", 10, 60, 20);
+                player.sendTitle("§aHave been restored.", "", 10, 60, 20);
             }
-        }.runTaskLater(plugin, 40L);  // 40L = 2초 후 (20 ticks = 1초)
+        }.runTaskLater(plugin, 40L);  // 40L = 2 seconds later (20 ticks = 1 second)
 
         new BukkitRunnable() {
             @Override
             public void run() {
-                player.sendTitle("§a지금까지", "", 10, 60, 20);
+                player.sendTitle("§aThank you for", "", 10, 60, 20);
             }
-        }.runTaskLater(plugin, 120L);  // 120L = 6초 후 (20 ticks = 1초)
+        }.runTaskLater(plugin, 120L);  // 120L = 6 seconds later (20 ticks = 1 second)
 
         new BukkitRunnable() {
             @Override
             public void run() {
-                player.sendTitle("§a'광부로 살아남기'플러그인을", "", 10, 60, 20);
+                player.sendTitle("§aPlaying the 'Surviving as a Miner' plugin", "", 10, 60, 20);
             }
-        }.runTaskLater(plugin, 160L);  // 160L = 8초 후 (20 ticks = 1초)
+        }.runTaskLater(plugin, 160L);  // 160L = 8 seconds later (20 ticks = 1 second)
 
         new BukkitRunnable() {
             @Override
             public void run() {
-                player.sendTitle("§a플레이해주셔서 감사합니다.", "§e플러그인 제작자 : 이케", 10, 100, 20);
+                player.sendTitle("§aThank you for playing.", "§ePlugin Creator: Ike", 10, 100, 20);
             }
-        }.runTaskLater(plugin, 200L);  // 200L = 10초 후 (20 ticks = 1초)
+        }.runTaskLater(plugin, 200L);  // 200L = 10 seconds later (20 ticks = 1 second)
     }
 
     private String getMaterialName(Material material) {

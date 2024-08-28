@@ -24,7 +24,7 @@ public class PlayerMoveListener implements Listener {
     private Map<UUID, Double> playerO2;
     private Map<UUID, BukkitRunnable> activeTimers;
     private final double initialTime = 600.0;
-    private final double maxTime = 1800.0; // 최대 시간
+    private final double maxTime = 1800.0; // Maximum time
     private RPG plugin;
 
     public PlayerMoveListener(RPG plugin, HashMap<UUID, BossBar> playerBossBars, Map<UUID, Double> playerO2) {
@@ -41,20 +41,20 @@ public class PlayerMoveListener implements Listener {
         BossBar bossBar = playerBossBars.get(playerId);
         double remainingTime = playerO2.getOrDefault(playerId, initialTime);
 
-        // 광석으로 늘릴 수 있는 최대 시간 제한
+        // Limit maximum time that can be extended with ores
         if (remainingTime > maxTime) {
-            player.sendMessage("광석으로 늘릴 수 있는 최대 시간은 30분 입니다.");
+            player.sendMessage("The maximum time you can extend with ores is 30 minutes.");
             remainingTime = maxTime;
             playerO2.put(playerId, remainingTime);
         }
 
         double y = player.getLocation().getY();
         if (y < 60) {
-            // 지하에 있을 때
+            // When underground
             if (bossBar != null) {
                 bossBar.setVisible(true);
-                bossBar.setTitle("산소 고갈까지 남은 시간 : " + formatTime(remainingTime));
-                if(remainingTime <= 0) {
+                bossBar.setTitle("Time until oxygen depletion: " + formatTime(remainingTime));
+                if (remainingTime <= 0) {
                     remainingTime = 0;
                 }
                 bossBar.setProgress(clamp(remainingTime / initialTime, 0.0, 1.0));
@@ -73,7 +73,7 @@ public class PlayerMoveListener implements Listener {
                             double timeLeft = timeLeftObj;
                             if (timeLeft <= 0) {
                                 player.damage(5);
-                                if(player.getGameMode() == GameMode.CREATIVE) {
+                                if (player.getGameMode() == GameMode.CREATIVE) {
                                     player.setHealth(0);
                                 }
                                 if (currentBossBar != null) {
@@ -85,14 +85,14 @@ public class PlayerMoveListener implements Listener {
                                 timeLeft -= 1.0;
 
                                 if (timeLeft > maxTime) {
-                                    player.sendMessage("광석으로 늘릴 수 있는 최대 시간은 30분 입니다.");
+                                    player.sendMessage("The maximum time you can extend with ores is 30 minutes.");
                                     timeLeft = maxTime;
                                 }
 
                                 playerO2.put(playerId, timeLeft);
                                 if (currentBossBar != null) {
                                     currentBossBar.setProgress(clamp(timeLeft / initialTime, 0.0, 1.0));
-                                    currentBossBar.setTitle("산소 고갈까지 남은 시간 : " + formatTime(timeLeft));
+                                    currentBossBar.setTitle("Time until oxygen depletion: " + formatTime(timeLeft));
                                 }
                                 if (timeLeft % 30 == 0) {
                                     createLava(player);
@@ -102,22 +102,22 @@ public class PlayerMoveListener implements Listener {
                             if (currentBossBar != null) {
                                 currentBossBar.setVisible(false);
                             }
-                            this.cancel(); // 지상에 있을 때 타이머를 멈추지만 초기화하지 않음
+                            this.cancel(); // Stop the timer when above ground but don't reset it
                             activeTimers.remove(playerId);
                         }
                     }
                 };
-                timer.runTaskTimer(plugin, 20, 20); // 1초(20틱)마다 실행
+                timer.runTaskTimer(plugin, 20, 20); // Run every 1 second (20 ticks)
                 activeTimers.put(playerId, timer);
             }
         } else {
-            // 지상에 있을 때
+            // When above ground
             if (bossBar != null) {
                 bossBar.setVisible(false);
             }
 
             if (activeTimers.containsKey(playerId)) {
-                activeTimers.get(playerId).cancel(); // 타이머를 멈추기만 하고 초기화하지 않음
+                activeTimers.get(playerId).cancel(); // Just stop the timer, don't reset it
                 activeTimers.remove(playerId);
             }
         }
@@ -140,7 +140,7 @@ public class PlayerMoveListener implements Listener {
     private String formatTime(double seconds) {
         int minutes = (int) (seconds / 60);
         int secs = (int) (seconds % 60);
-        return String.format("%02d분 %02d초", minutes, secs);
+        return String.format("%02d minutes %02d seconds", minutes, secs);
     }
 
     private double clamp(double value, double min, double max) {

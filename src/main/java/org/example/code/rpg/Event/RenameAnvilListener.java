@@ -6,26 +6,23 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
 import org.bukkit.inventory.AnvilInventory;
-import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
-
-import static org.bukkit.Bukkit.getLogger;
 
 public class RenameAnvilListener implements Listener {
 
     @EventHandler
     public void onPrepareAnvil(PrepareAnvilEvent event) {
         AnvilInventory anvilInventory = event.getInventory();
-        ItemStack resultItem = anvilInventory.getItem(2); // 모루의 결과 아이템 슬롯 (슬롯 2번)
+        ItemStack resultItem = anvilInventory.getItem(2); // Anvil result item slot (slot 2)
 
         if (resultItem != null && resultItem.hasItemMeta() && resultItem.getItemMeta().hasDisplayName()) {
             String newName = resultItem.getItemMeta().getDisplayName();
 
-            // 특정 단어가 포함된 이름으로 변경을 막음
-            if (newName.contains("광부 1차")||newName.contains("광부 2차")||newName.contains("광부 3차")||newName.contains("광부 4차")) {
+            // Prevent renaming to names containing specific words
+            if (newName.contains("Miner 1st Class") || newName.contains("Miner 2nd Class") || newName.contains("Miner 3rd Class") || newName.contains("Miner 4th Class")) {
                 event.setResult(null);
-                // 플레이어에게 메시지 보내기
-                event.getView().getPlayer().sendMessage(ChatColor.RED + "이 아이템의 이름을 '광부'로 변경할 수 없습니다.");
+                // Send a message to the player
+                event.getView().getPlayer().sendMessage(ChatColor.RED + "You cannot rename this item to include 'Miner'.");
             }
         }
     }

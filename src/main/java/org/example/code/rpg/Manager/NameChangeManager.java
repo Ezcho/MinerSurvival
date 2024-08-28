@@ -8,7 +8,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.example.code.rpg.RPG;
@@ -40,29 +39,29 @@ public class NameChangeManager implements Listener {
                 config.set("users." + player.getUniqueId().toString() + ".name", newName);
                 plugin.saveConfig();
 
-                player.sendMessage(ChatColor.GREEN + "이름이 성공적으로 " + ChatColor.YELLOW + newName + ChatColor.GREEN + "(으)로 변경되었습니다!");
+                player.sendMessage(ChatColor.GREEN + "Your name has been successfully changed to " + ChatColor.YELLOW + newName + ChatColor.GREEN + "!");
 
-                // 스코어보드 업데이트
+                // Update scoreboard
                 plugin.getScoreboardManager().setPlayerScoreboard(player);
 
-                // 이름 변경하기(플레이어 위에 뜨는 마인크래프트 고유 닉네임, Tab 누르면 뜨는 플레이어 목록 리스트에 뜨는 닉네임)
+                // Change name (Minecraft unique nickname above the player, name in the player list when pressing Tab)
                 player.setDisplayName(newName);
                 player.setPlayerListName(newName);
 
-                // 플레이어 머리 위에 뜨는 이름 업데이트
+                // Update the name displayed above the player's head
                 player.setCustomName(newName);
                 player.setCustomNameVisible(true);
 
-                // 사용 이후 인벤토리에서 삭제
+                // Remove the item from the inventory after use
                 ItemStack itemInHand = player.getInventory().getItemInMainHand();
                 if (itemInHand != null && itemInHand.getType() == Material.PAPER && itemInHand.hasItemMeta()) {
                     ItemMeta meta = itemInHand.getItemMeta();
-                    if (meta != null && ChatColor.stripColor(meta.getDisplayName()).equals("이름 변경권")) {
+                    if (meta != null && ChatColor.stripColor(meta.getDisplayName()).equals("Name Change Token")) {
                         itemInHand.setAmount(itemInHand.getAmount() - 1);
                     }
                 }
 
-                // 리스트에서 플레이어 제거
+                // Remove player from the list
                 nameChangeList.remove(player);
             });
         }

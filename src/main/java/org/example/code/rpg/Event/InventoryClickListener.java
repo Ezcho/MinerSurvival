@@ -28,10 +28,10 @@ public class InventoryClickListener implements Listener {
     private final PlayerScoreboardManager scoreboardManager;
     private final JobConfigManager jobConfigManager;
 
-    // Material 한글 이름 매핑
+    // Material name mappings in English
     private final Map<Material, String> materialNames;
 
-    // 단서 해금 조건 저장
+    // Clue unlock conditions storage
     private Material clue1Material;
     private Material clue2Material;
     private Material clue3Material;
@@ -48,25 +48,25 @@ public class InventoryClickListener implements Listener {
         this.scoreboardManager = scoreboardManager;
         this.jobConfigManager = jobConfigManager;
 
-        // 한글 이름 매핑 초기화
+        // Initialize material name mappings
         this.materialNames = new HashMap<>();
-        this.materialNames.put(Material.COAL, "석탄");
-        this.materialNames.put(Material.COPPER_INGOT, "구리 주괴");
-        this.materialNames.put(Material.IRON_INGOT, "철 주괴");
-        this.materialNames.put(Material.GOLD_INGOT, "금 주괴");
-        this.materialNames.put(Material.REDSTONE, "레드스톤");
-        this.materialNames.put(Material.LAPIS_LAZULI, "청금석");
-        this.materialNames.put(Material.EMERALD, "에메랄드");
-        this.materialNames.put(Material.DIAMOND, "다이아몬드");
-        this.materialNames.put(Material.AMETHYST_SHARD, "자수정 조각");
-        this.materialNames.put(Material.QUARTZ, "석영");
-        this.materialNames.put(Material.NETHERITE_INGOT, "네더라이트 주괴");
+        this.materialNames.put(Material.COAL, "Coal");
+        this.materialNames.put(Material.COPPER_INGOT, "Copper Ingot");
+        this.materialNames.put(Material.IRON_INGOT, "Iron Ingot");
+        this.materialNames.put(Material.GOLD_INGOT, "Gold Ingot");
+        this.materialNames.put(Material.REDSTONE, "Redstone");
+        this.materialNames.put(Material.LAPIS_LAZULI, "Lapis Lazuli");
+        this.materialNames.put(Material.EMERALD, "Emerald");
+        this.materialNames.put(Material.DIAMOND, "Diamond");
+        this.materialNames.put(Material.AMETHYST_SHARD, "Amethyst Shard");
+        this.materialNames.put(Material.QUARTZ, "Quartz");
+        this.materialNames.put(Material.NETHERITE_INGOT, "Netherite Ingot");
 
-        // 단서 해금 조건 랜덤 초기화
+        // Randomly initialize clue unlock conditions
         initializeClueRequirements();
     }
 
-    // 단서 해금 조건을 랜덤하게 설정하는 메서드
+    // Method to randomly set clue unlock conditions
     private void initializeClueRequirements() {
         Set<Material> materialSet = materialNames.keySet();
         Material[] materials = materialSet.toArray(new Material[0]);
@@ -83,7 +83,7 @@ public class InventoryClickListener implements Listener {
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
         String inventoryTitle = event.getView().getTitle();
-        if (!inventoryTitle.equals("메뉴") && !inventoryTitle.equals("전직 상점") && !inventoryTitle.equals("광물 상점") && !inventoryTitle.equals("해결 단서")) return;
+        if (!inventoryTitle.equals("Menu") && !inventoryTitle.equals("Job Change Shop") && !inventoryTitle.equals("Mineral Shop") && !inventoryTitle.equals("Clue Resolution")) return;
 
         Player player = (Player) event.getWhoClicked();
         ItemStack clickedItem = event.getCurrentItem();
@@ -91,10 +91,10 @@ public class InventoryClickListener implements Listener {
         if (event.getClickedInventory() == player.getInventory()) {
             if (event.isShiftClick()) {
                 event.setCancelled(true);
-                player.sendMessage("이 GUI에서는 Shift + 좌클릭을 할 수 없습니다.");
+                player.sendMessage("Shift + Left Click is not allowed in this GUI.");
             } else if (event.getClick() == ClickType.DOUBLE_CLICK) {
                 event.setCancelled(true);
-                player.sendMessage("이 GUI에서는 더블클릭을 할 수 없습니다.");
+                player.sendMessage("Double-clicking is not allowed in this GUI.");
             }
             return;
         }
@@ -108,44 +108,44 @@ public class InventoryClickListener implements Listener {
         if (clickedItem.getType() == Material.ENCHANTED_BOOK && clickedItem.hasItemMeta()) {
             String displayName = ChatColor.stripColor(clickedItem.getItemMeta().getDisplayName());
 
-            // 현재 플레이어의 직업 및 레벨을 가져옵니다.
+            // Get the player's current job and level
             String[] jobInfo = jobConfigManager.getPlayerJob(player).split(",");
             String job = jobInfo[0];
             String level = jobInfo[1];
 
-            if (displayName.equals("전직")) {
+            if (displayName.equals("Job Change")) {
                 guiManager.jobShop(player);
-            } else if (displayName.equals("[전직] 광부 1차")) {
-                if (job.equals("직업 없음") && level.equals(" ")) {
-                    processJobPurchase(player, 5000, "광부 1차", ChatColor.DARK_PURPLE + "광부 1차로 전직합니다.");
+            } else if (displayName.equals("[Job Change] Miner 1st Stage")) {
+                if (job.equals("No Job") && level.equals(" ")) {
+                    processJobPurchase(player, 5000, "Miner 1st Stage", ChatColor.DARK_PURPLE + "You are now a Miner 1st Stage.");
                 } else {
-                    player.sendMessage(ChatColor.RED + "당신은 이미 직업을 가지고 있습니다.");
+                    player.sendMessage(ChatColor.RED + "You already have a job.");
                 }
-            } else if (displayName.equals("[전직] 광부 2차")) {
-                if (job.equals("§7§l광부") && level.equals("1차")) {
-                    processJobPurchase(player, 30000, "광부 2차", ChatColor.DARK_PURPLE + "광부 2차로 전직합니다.");
+            } else if (displayName.equals("[Job Change] Miner 2nd Stage")) {
+                if (job.equals("§7§lMiner") && level.equals("1st Stage")) {
+                    processJobPurchase(player, 30000, "Miner 2nd Stage", ChatColor.DARK_PURPLE + "You are now a Miner 2nd Stage.");
                 } else {
-                    player.sendMessage(ChatColor.RED + "이 전직책을 구매하려면 '광부 1차' 이어야 합니다.");
+                    player.sendMessage(ChatColor.RED + "You must be a 'Miner 1st Stage' to purchase this job book.");
                 }
-            } else if (displayName.equals("[전직] 광부 3차")) {
-                if (job.equals("§7§l광부") && level.equals("2차")) {
-                    processJobPurchase(player, 65000, "광부 3차", ChatColor.DARK_PURPLE + "광부 3차로 전직합니다.");
+            } else if (displayName.equals("[Job Change] Miner 3rd Stage")) {
+                if (job.equals("§7§lMiner") && level.equals("2nd Stage")) {
+                    processJobPurchase(player, 65000, "Miner 3rd Stage", ChatColor.DARK_PURPLE + "You are now a Miner 3rd Stage.");
                 } else {
-                    player.sendMessage(ChatColor.RED + "이 전직책을 구매하려면 '광부 2차' 이어야 합니다.");
+                    player.sendMessage(ChatColor.RED + "You must be a 'Miner 2nd Stage' to purchase this job book.");
                 }
-            } else if (displayName.equals("[전직] 광부 4차")) {
-                if (job.equals("§7§l광부") && level.equals("3차")) {
-                    processJobPurchase(player, 100000, "광부 4차", ChatColor.DARK_PURPLE + "광부 4차로 전직합니다.");
+            } else if (displayName.equals("[Job Change] Miner 4th Stage")) {
+                if (job.equals("§7§lMiner") && level.equals("3rd Stage")) {
+                    processJobPurchase(player, 100000, "Miner 4th Stage", ChatColor.DARK_PURPLE + "You are now a Miner 4th Stage.");
                 } else {
-                    player.sendMessage(ChatColor.RED + "이 전직책을 구매하려면 '광부 3차' 이어야 합니다.");
+                    player.sendMessage(ChatColor.RED + "You must be a 'Miner 3rd Stage' to purchase this job book.");
                 }
             }
         } else if (clickedItem.getType() == Material.NETHERITE_PICKAXE && clickedItem.hasItemMeta()) {
             guiManager.mineralShop(player);
         } else if (clickedItem.getType() == Material.PAPER && clickedItem.hasItemMeta()) {
-            boolean clue1Unlocked = plugin.loadClueState(player, "단서1");
-            boolean clue2Unlocked = plugin.loadClueState(player, "단서2");
-            boolean clue3Unlocked = plugin.loadClueState(player, "단서3");
+            boolean clue1Unlocked = plugin.loadClueState(player, "Clue1");
+            boolean clue2Unlocked = plugin.loadClueState(player, "Clue2");
+            boolean clue3Unlocked = plugin.loadClueState(player, "Clue3");
             guiManager.clues(player, clue1Unlocked, clue2Unlocked, clue3Unlocked);
         } else {
             handleMineralSale(player, clickedItem, event.getClick());
@@ -155,13 +155,13 @@ public class InventoryClickListener implements Listener {
     private void processJobPurchase(Player player, int cost, String jobName, String lore) {
         if (moneyManager.getBalance(player) >= cost) {
             moneyManager.subtractBalance(player, cost);
-            player.sendMessage(ChatColor.GREEN + "성공적으로 구매 완료했습니다!");
+            player.sendMessage(ChatColor.GREEN + "Purchase completed successfully!");
 
             ItemStack customItem = createCustomItem(jobName, lore);
             addCustomItemToPlayer(player, customItem);
             scoreboardManager.setPlayerScoreboard(player);
         } else {
-            player.sendMessage(ChatColor.RED + "잔액이 부족합니다.");
+            player.sendMessage(ChatColor.RED + "Insufficient balance.");
         }
     }
 
@@ -169,7 +169,7 @@ public class InventoryClickListener implements Listener {
         ItemStack customItem = new ItemStack(Material.ENCHANTED_BOOK);
         ItemMeta meta = customItem.getItemMeta();
         if (meta != null) {
-            meta.setDisplayName(ChatColor.YELLOW + "" + ChatColor.BOLD + "[전직] " + ChatColor.GRAY + "" + ChatColor.BOLD + name);
+            meta.setDisplayName(ChatColor.YELLOW + "" + ChatColor.BOLD + "[Job Change] " + ChatColor.GRAY + "" + ChatColor.BOLD + name);
             meta.setLore(Collections.singletonList(ChatColor.translateAlternateColorCodes('&', lore)));
             customItem.setItemMeta(meta);
         }
@@ -181,7 +181,7 @@ public class InventoryClickListener implements Listener {
             player.getInventory().addItem(customItem);
         } else {
             player.getWorld().dropItem(player.getLocation(), customItem);
-            player.sendMessage(ChatColor.RED + "인벤토리가 가득 차서 아이템이 바닥에 떨어졌습니다!");
+            player.sendMessage(ChatColor.RED + "Your inventory is full, the item has dropped on the ground!");
         }
     }
 
@@ -273,28 +273,28 @@ public class InventoryClickListener implements Listener {
 
         if (player.getInventory().containsAtLeast(new ItemStack(material), amountToSell)) {
             moneyManager.addBalance(player, salePrice);
-            player.sendMessage(ChatColor.GREEN + "" + amountToSell + "개를 " + salePrice + "원에 판매했습니다.");
+            player.sendMessage(ChatColor.GREEN + "You sold " + amountToSell + " units for " + salePrice + " coins.");
             player.getInventory().removeItem(new ItemStack(material, amountToSell));
             updateSalesCount(player, material, amountToSell);
             scoreboardManager.setPlayerScoreboard(player);
         } else {
-            player.sendMessage(ChatColor.RED + "판매할 " + materialName + "이(가) 충분하지 않습니다.");
+            player.sendMessage(ChatColor.RED + "You do not have enough " + materialName + " to sell.");
         }
     }
 
     private void updateSalesCount(Player player, Material material, int amountSold) {
-        checkAndUpdateClue(player, material, amountSold, clue1Material, clue1RequiredSales, "단서1");
-        checkAndUpdateClue(player, material, amountSold, clue2Material, clue2RequiredSales, "단서2");
-        checkAndUpdateClue(player, material, amountSold, clue3Material, clue3RequiredSales, "단서3");
+        checkAndUpdateClue(player, material, amountSold, clue1Material, clue1RequiredSales, "Clue1");
+        checkAndUpdateClue(player, material, amountSold, clue2Material, clue2RequiredSales, "Clue2");
+        checkAndUpdateClue(player, material, amountSold, clue3Material, clue3RequiredSales, "Clue3");
     }
 
     private void checkAndUpdateClue(Player player, Material material, int amountSold, Material clueMaterial, int requiredSales, String clueName) {
         if (material == clueMaterial) {
-            int currentSales = plugin.getSalesCount(player, clueName) + amountSold; // 플레이어별 판매량 저장 및 누적
+            int currentSales = plugin.getSalesCount(player, clueName) + amountSold; // Store and accumulate sales per player
             plugin.setSalesCount(player, clueName, currentSales);
 
             if (currentSales >= requiredSales) {
-                player.sendMessage(ChatColor.GREEN + clueName + "이(가) 개방되었습니다!");
+                player.sendMessage(ChatColor.GREEN + clueName + " has been unlocked!");
                 plugin.saveClueState(player, clueName, true);
             }
         }

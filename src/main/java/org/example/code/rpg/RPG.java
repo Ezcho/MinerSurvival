@@ -26,17 +26,17 @@ public final class RPG extends JavaPlugin {
     private NameChangeManager nameChangeManager;
     private HashMap<UUID, BossBar> playerBossBars = new HashMap<>();
     private Map<UUID, Double> playerO2 = new HashMap<>();
-    private final Map<Player, Map<String, Integer>> playerSalesCount = new HashMap<>(); // 추가된 부분
+    private final Map<Player, Map<String, Integer>> playerSalesCount = new HashMap<>(); // Newly added part
 
     @Override
     public void onEnable() {
-        getLogger().info("MinerSurvival Plugin이 적용되었습니다.");
+        getLogger().info("MinerSurvival Plugin has been enabled.");
         this.saveDefaultConfig();
-        this.getCommand("광부").setExecutor(new JobCommand(this));
-        this.getCommand("돈").setExecutor(new MoneyCommand(this));
-        this.getCommand("도움말").setExecutor(new PluginHelpCommand(this));
-        this.getCommand("메뉴").setExecutor(new GuiCommand(this));
-        this.getCommand("이름변경권").setExecutor(new NameChangeTokenCommand(this));
+        this.getCommand("miner").setExecutor(new JobCommand(this));
+        this.getCommand("money").setExecutor(new MoneyCommand(this));
+        this.getCommand("mhelp").setExecutor(new PluginHelpCommand(this));
+        this.getCommand("menu").setExecutor(new GuiCommand(this));
+        this.getCommand("namechange").setExecutor(new NameChangeTokenCommand(this));
         guiManager = new GuiManager(this);
         jobConfigManager = new JobConfigManager(this);
         moneyManager = new MoneyManager(this);
@@ -59,7 +59,7 @@ public final class RPG extends JavaPlugin {
         getServer().getPluginManager().registerEvents(beaconOfferingListener, this);
         getServer().getPluginManager().registerEvents(nameChangeManager, this);
 
-        // 커스텀 구조물 데이터팩 불러오기
+        // Load custom structure data pack
         boolean dataPackCopied = false;
 
         try {
@@ -72,17 +72,17 @@ public final class RPG extends JavaPlugin {
                 dataPackCopied = true;
             }
         } catch (IOException e) {
-            getLogger().log(Level.SEVERE, "데이터 팩 파일을 복사하지 못했습니다.", e);
+            getLogger().log(Level.SEVERE, "Failed to copy data pack files.", e);
         }
 
         if (dataPackCopied) {
-            getLogger().info("데이터 팩 파일이 복사되었습니다. 변경 사항을 적용하려면 서버를 실행/reload를 하거나 다시 시작하십시오.");
+            getLogger().info("Data pack files have been copied. To apply the changes, run/reload the server or restart it.");
         }
     }
 
     @Override
     public void onDisable() {
-        getLogger().info("MinerSurvival Plugin 적용이 해제되었습니다.");
+        getLogger().info("MinerSurvival Plugin has been disabled.");
         this.saveDefaultConfig();
     }
 
@@ -121,13 +121,13 @@ public final class RPG extends JavaPlugin {
         return getConfig().getBoolean("users." + player.getUniqueId().toString() + "." + clue, false);
     }
 
-    // 플레이어별 단서 판매량을 설정하는 메서드
+    // Method to set clue sales count per player
     public void setSalesCount(Player player, String clueName, int count) {
         Map<String, Integer> salesCount = playerSalesCount.computeIfAbsent(player, k -> new HashMap<>());
         salesCount.put(clueName, count);
     }
 
-    // 플레이어별 단서 판매량을 가져오는 메서드
+    // Method to get clue sales count per player
     public int getSalesCount(Player player, String clueName) {
         Map<String, Integer> salesCount = playerSalesCount.get(player);
         return salesCount != null ? salesCount.getOrDefault(clueName, 0) : 0;

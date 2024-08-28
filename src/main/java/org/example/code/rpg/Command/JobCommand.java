@@ -24,18 +24,18 @@ public class JobCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player)) {
-            sender.sendMessage(ChatColor.RED + "플레이어만 사용 가능한 명령어 입니다.");
+            sender.sendMessage(ChatColor.RED + "This command is available only to players.");
             return true;
         }
         if (args == null) {
-            sender.sendMessage(ChatColor.RED + "전직할 직업과 전직 레벨을 입력해주세요.");
+            sender.sendMessage(ChatColor.RED + "Please enter the job and level you wish to change to.");
         }
 
         Player player = (Player) sender;
 
         // 플레이어가 OP인지 확인
         if (!player.isOp()) {
-            player.sendMessage(ChatColor.RED + "이 명령어를 사용할 권한이 없습니다.");
+            player.sendMessage(ChatColor.RED + "You do not have permission to use this command.");
             return true;
         }
         String command2 = command.getName();

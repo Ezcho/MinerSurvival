@@ -36,33 +36,33 @@ public class BlockBreakListener implements Listener {
     );
     private final Map<UUID, Long> cooldowns = new HashMap<>();
 
-    // 플레이어가 배치한 블록의 위치를 추적하기 위한 Set
+    // Set to track the location of blocks placed by the player
     private final Set<Location> playerPlacedBlocks = new HashSet<>();
 
-    // 한글 이름 맵 생성
+    // Create a map for Korean names
     private static final Map<Material, String> materialToKoreanNameMap = new HashMap<>();
 
     static {
-        materialToKoreanNameMap.put(Material.COPPER_ORE, "구리 광석");
-        materialToKoreanNameMap.put(Material.DEEPSLATE_COPPER_ORE, "심층암 구리 광석");
-        materialToKoreanNameMap.put(Material.IRON_ORE, "철 광석");
-        materialToKoreanNameMap.put(Material.DEEPSLATE_IRON_ORE, "심층암 철 광석");
-        materialToKoreanNameMap.put(Material.GOLD_ORE, "금 광석");
-        materialToKoreanNameMap.put(Material.DEEPSLATE_GOLD_ORE, "심층암 금 광석");
-        materialToKoreanNameMap.put(Material.NETHER_GOLD_ORE, "네더 금 광석");
-        materialToKoreanNameMap.put(Material.ANCIENT_DEBRIS, "고대 잔해");
-        materialToKoreanNameMap.put(Material.COAL_ORE, "석탄 광석");
-        materialToKoreanNameMap.put(Material.DEEPSLATE_COAL_ORE, "심층암 석탄 광석");
-        materialToKoreanNameMap.put(Material.REDSTONE_ORE, "레드스톤 광석");
-        materialToKoreanNameMap.put(Material.DEEPSLATE_REDSTONE_ORE, "심층암 레드스톤 광석");
-        materialToKoreanNameMap.put(Material.LAPIS_ORE, "청금석 광석");
-        materialToKoreanNameMap.put(Material.DEEPSLATE_LAPIS_ORE, "심층암 청금석 광석");
-        materialToKoreanNameMap.put(Material.EMERALD_ORE, "에메랄드 광석");
-        materialToKoreanNameMap.put(Material.DEEPSLATE_EMERALD_ORE, "심층암 에메랄드 광석");
-        materialToKoreanNameMap.put(Material.DIAMOND_ORE, "다이아몬드 광석");
-        materialToKoreanNameMap.put(Material.DEEPSLATE_DIAMOND_ORE, "심층암 다이아몬드 광석");
-        materialToKoreanNameMap.put(Material.AMETHYST_CLUSTER, "자수정 군집");
-        materialToKoreanNameMap.put(Material.NETHER_QUARTZ_ORE, "네더 석영 광석");
+        materialToKoreanNameMap.put(Material.COPPER_ORE, "Copper Ore");
+        materialToKoreanNameMap.put(Material.DEEPSLATE_COPPER_ORE, "Deepslate Copper Ore");
+        materialToKoreanNameMap.put(Material.IRON_ORE, "Iron Ore");
+        materialToKoreanNameMap.put(Material.DEEPSLATE_IRON_ORE, "Deepslate Iron Ore");
+        materialToKoreanNameMap.put(Material.GOLD_ORE, "Gold Ore");
+        materialToKoreanNameMap.put(Material.DEEPSLATE_GOLD_ORE, "Deepslate Gold Ore");
+        materialToKoreanNameMap.put(Material.NETHER_GOLD_ORE, "Nether Gold Ore");
+        materialToKoreanNameMap.put(Material.ANCIENT_DEBRIS, "Ancient Debris");
+        materialToKoreanNameMap.put(Material.COAL_ORE, "Coal Ore");
+        materialToKoreanNameMap.put(Material.DEEPSLATE_COAL_ORE, "Deepslate Coal Ore");
+        materialToKoreanNameMap.put(Material.REDSTONE_ORE, "Redstone Ore");
+        materialToKoreanNameMap.put(Material.DEEPSLATE_REDSTONE_ORE, "Deepslate Redstone Ore");
+        materialToKoreanNameMap.put(Material.LAPIS_ORE, "Lapis Lazuli Ore");
+        materialToKoreanNameMap.put(Material.DEEPSLATE_LAPIS_ORE, "Deepslate Lapis Lazuli Ore");
+        materialToKoreanNameMap.put(Material.EMERALD_ORE, "Emerald Ore");
+        materialToKoreanNameMap.put(Material.DEEPSLATE_EMERALD_ORE, "Deepslate Emerald Ore");
+        materialToKoreanNameMap.put(Material.DIAMOND_ORE, "Diamond Ore");
+        materialToKoreanNameMap.put(Material.DEEPSLATE_DIAMOND_ORE, "Deepslate Diamond Ore");
+        materialToKoreanNameMap.put(Material.AMETHYST_CLUSTER, "Amethyst Cluster");
+        materialToKoreanNameMap.put(Material.NETHER_QUARTZ_ORE, "Nether Quartz Ore");
     }
 
     public BlockBreakListener(RPG plugin, Map<UUID, Double> playerO2) {
@@ -77,16 +77,16 @@ public class BlockBreakListener implements Listener {
         Material blockType = block.getType();
         Location blockLocation = block.getLocation();
 
-        // 만약 블록이 trackedBlocks에 포함되어 있다면 플레이어가 배치한 블록인지 확인
+        // If the block is included in trackedBlocks, check if the player placed the block
         if (trackedBlocks.contains(blockType) && playerPlacedBlocks.contains(blockLocation)) {
-            // 플레이어가 배치한 블록이면 추가 효과를 적용하지 않음
-            player.sendMessage(ChatColor.RED + "이 블록은 자연 생성된 것이 아니므로 효과가 적용되지 않습니다.");
+            // If the block was placed by the player, do not apply additional effects
+            player.sendMessage(ChatColor.RED + "This block was player-placed and does not grant effects.");
             return;
         }
 
         JobConfigManager jobConfigManager = new JobConfigManager(plugin);
         String[] jobData = jobConfigManager.getPlayerJob(player).split(",");
-        String job = jobData.length > 0 ? jobData[0] : "직업 없음";
+        String job = jobData.length > 0 ? jobData[0] : "No job";
         String level = jobData.length > 1 ? jobData[1] : "";
 
         handleOreDrops(event, player, blockType);
@@ -96,7 +96,7 @@ public class BlockBreakListener implements Listener {
 
     @EventHandler
     public void onBlockPlace(BlockPlaceEvent event) {
-        // 플레이어가 블록을 배치할 때 해당 위치를 추적
+        // Track the location when a player places a block
         playerPlacedBlocks.add(event.getBlock().getLocation());
     }
 
@@ -111,20 +111,20 @@ public class BlockBreakListener implements Listener {
         oreToIngotMap.put(Material.NETHER_GOLD_ORE, new ItemStack(Material.GOLD_INGOT));
         oreToIngotMap.put(Material.ANCIENT_DEBRIS, new ItemStack(Material.NETHERITE_INGOT));
 
-        // 블록을 부순 도구를 확인
+        // Check the tool used to break the block
         ItemStack tool = player.getInventory().getItemInMainHand();
 
-        // 각 블록에 필요한 곡괭이 레벨을 지정
+        // Specify the required pickaxe level for each block
         Map<Material, Integer> blockToRequiredPickaxeLevel = new HashMap<>();
-        blockToRequiredPickaxeLevel.put(Material.GOLD_ORE, 2); // 철곡괭이 이상 필요
+        blockToRequiredPickaxeLevel.put(Material.GOLD_ORE, 2); // Requires Iron Pickaxe or higher
         blockToRequiredPickaxeLevel.put(Material.DEEPSLATE_GOLD_ORE, 2);
-        blockToRequiredPickaxeLevel.put(Material.IRON_ORE, 1); // 돌곡괭이 이상 필요
+        blockToRequiredPickaxeLevel.put(Material.IRON_ORE, 1); // Requires Stone Pickaxe or higher
         blockToRequiredPickaxeLevel.put(Material.DEEPSLATE_IRON_ORE, 1);
-        blockToRequiredPickaxeLevel.put(Material.COPPER_ORE, 1); // 돌곡괭이 이상 필요
+        blockToRequiredPickaxeLevel.put(Material.COPPER_ORE, 1); // Requires Stone Pickaxe or higher
         blockToRequiredPickaxeLevel.put(Material.DEEPSLATE_COPPER_ORE, 1);
-        blockToRequiredPickaxeLevel.put(Material.ANCIENT_DEBRIS, 3); // 다이아몬드곡괭이 이상 필요
+        blockToRequiredPickaxeLevel.put(Material.ANCIENT_DEBRIS, 3); // Requires Diamond Pickaxe or higher
 
-        // 곡괭이 레벨을 숫자로 변환
+        // Convert pickaxe levels to numbers
         Map<Material, Integer> pickaxeLevelMap = new HashMap<>();
         pickaxeLevelMap.put(Material.WOODEN_PICKAXE, 0);
         pickaxeLevelMap.put(Material.STONE_PICKAXE, 1);
@@ -134,28 +134,28 @@ public class BlockBreakListener implements Listener {
 
         int pickaxeLevel = pickaxeLevelMap.getOrDefault(tool.getType(), -1);
 
-        // 필요한 곡괭이 레벨과 사용된 곡괭이 레벨을 비교
+        // Compare required pickaxe level with the level of the used pickaxe
         if (blockToRequiredPickaxeLevel.containsKey(blockType)) {
             int requiredLevel = blockToRequiredPickaxeLevel.get(blockType);
             if (pickaxeLevel < requiredLevel) {
-                player.sendMessage(ChatColor.RED + "이 광석은 현재의 곡괭이로 부술 수 없습니다.");
+                player.sendMessage(ChatColor.RED + "This ore cannot be mined with your current pickaxe.");
                 return;
             }
         }
 
-        // 블록 타입이 oreToIngotMap에 있는 경우, 아이템 드롭
+        // If blockType is in oreToIngotMap, drop the corresponding item
         if (oreToIngotMap.containsKey(blockType)) {
             event.setDropItems(false);
             event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(), oreToIngotMap.get(blockType));
 
-            // 한글 이름 사용하여 메시지 출력
+            // Display message using Korean names
             String koreanName = materialToKoreanNameMap.getOrDefault(blockType, blockType.name());
-            player.sendMessage(ChatColor.GREEN + koreanName + ChatColor.YELLOW + "을(를) 캐서 아이템을 획득했습니다.");
+            player.sendMessage(ChatColor.GREEN + koreanName + ChatColor.YELLOW + " has been mined and item obtained.");
         }
     }
 
     private void handleJobEffects(Player player, Material blockType, String job, String level) {
-        if (!job.equals("§7§l광부")) return;
+        if (!job.equals("§7§lMiner")) return;
 
         int bonusChance = 10;
         Map<Material, ItemStack> bonusItems = new HashMap<>();
@@ -183,7 +183,7 @@ public class BlockBreakListener implements Listener {
         if (bonusItems.containsKey(blockType) && Math.random() * 100 < bonusChance) {
             player.getInventory().addItem(bonusItems.get(blockType));
             String koreanName = materialToKoreanNameMap.getOrDefault(blockType, blockType.name());
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&e" + koreanName + "&a을 &e5개&a 더 얻었습니다!"));
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&e" + koreanName + "&a You have obtained 5 more!"));
         }
 
         if (trackedBlocks.contains(blockType)) {
@@ -191,18 +191,18 @@ public class BlockBreakListener implements Listener {
             playerBlockCount.put(playerId, playerBlockCount.getOrDefault(playerId, 0) + 1);
 
             if (playerBlockCount.get(playerId) >= 50) {
-                int hasteLevel = level.equals("3차") || level.equals("4차") ? 1 : 0;
+                int hasteLevel = level.equals("Tier 3") || level.equals("Tier 4") ? 1 : 0;
                 player.addPotionEffect(new PotionEffect(PotionEffectType.FAST_DIGGING, 30 * 20, hasteLevel));
-                player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&a돌이나 광물을 50개 캐서 &e성급함 " + (hasteLevel + 1) + " 효과&a를 &e30초&a 동안 받았습니다!"));
+                player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&aYou have mined 50 stones or ores and received &eHaste " + (hasteLevel + 1) + " effect&a for &e30 seconds&a!"));
                 playerBlockCount.put(playerId, 0);
             }
 
-            if (level.equals("2차") || level.equals("3차") || level.equals("4차")) {
+            if (level.equals("Tier 2") || level.equals("Tier 3") || level.equals("Tier 4")) {
                 handleNightVisionEffect(player, playerId);
             }
         }
 
-        if (level.equals("4차")) {
+        if (level.equals("Tier 4")) {
             player.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, Integer.MAX_VALUE, 0));
         }
     }
@@ -217,7 +217,7 @@ public class BlockBreakListener implements Listener {
             cooldowns.put(playerId, currentTime + effectCooldown);
         } else {
             long remainingCooldown = (effectEndTime - currentTime) / 1000;
-            player.sendMessage("야간투시 효과의 쿨타임은 " + remainingCooldown + "초 남았습니다.");
+            player.sendMessage("Night Vision effect cooldown is " + remainingCooldown + " seconds remaining.");
         }
     }
 
@@ -249,7 +249,7 @@ public class BlockBreakListener implements Listener {
             playerO2.put(player.getUniqueId(), newOxygenTime);
 
             String koreanName = materialToKoreanNameMap.getOrDefault(blockType, blockType.name());
-            String message = ChatColor.GREEN + koreanName + ChatColor.RESET + "을(를) 부숴서 산소 에너지가 " + ChatColor.GREEN + oxygenRecoveryMap.get(blockType) + "(초)" + ChatColor.RESET + "만큼 더 높아졌습니다!";
+            String message = ChatColor.GREEN + koreanName + ChatColor.RESET + " was mined and your oxygen energy has increased by " + ChatColor.GREEN + oxygenRecoveryMap.get(blockType) + " seconds" + ChatColor.RESET + "!";
             player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(message));
         }
     }

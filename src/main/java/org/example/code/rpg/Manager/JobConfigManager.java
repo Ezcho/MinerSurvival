@@ -6,7 +6,6 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.example.code.rpg.Event.RenameAnvilListener;
 import org.example.code.rpg.RPG;
 
 import java.util.ArrayList;
@@ -15,9 +14,11 @@ import java.util.List;
 
 public class JobConfigManager {
     private RPG plugin;
+
     public JobConfigManager(RPG plugin) {
         this.plugin = plugin;
     }
+
     public void jobCreate(Player player, String job, String level) {
         FileConfiguration config = plugin.getConfig();
         config.set("users." + player.getUniqueId().toString() + ".job", job);
@@ -27,14 +28,14 @@ public class JobConfigManager {
 
     public String getPlayerJob(Player player) {
         FileConfiguration config = plugin.getConfig();
-        String job = config.getString("users." + player.getUniqueId().toString() + ".job", "광부");
-        String level = config.getString("users." + player.getUniqueId().toString() + ".level", "1차");
+        String job = config.getString("users." + player.getUniqueId().toString() + ".job", "Miner");
+        String level = config.getString("users." + player.getUniqueId().toString() + ".level", "1st Class");
         return job + "," + level;
     }
 
-    // 직업 전직책 이름 체크 함수(switch case문 너무 길어져서 이걸로 변경)
+    // Job promotion book name check function (replaced switch case due to length)
     public boolean jobBookNameCheck(String jobBookName) {
-        List<String> minerBooks = Arrays.asList("광부 1차", "광부 2차", "광부 3차", "광부 4차");
+        List<String> minerBooks = Arrays.asList("Miner 1st Class", "Miner 2nd Class", "Miner 3rd Class", "Miner 4th Class");
         for (String minerBook : minerBooks) {
             if (jobBookName.contains(minerBook)) {
                 return true;
@@ -43,32 +44,33 @@ public class JobConfigManager {
         return false;
     }
 
-    public void createCustomItem(Player player, String command,String job) {
-        ItemStack customItem = new ItemStack(Material.ENCHANTED_BOOK); // 인챈트된 책으로 커스텀아이템을 생성
-        ItemMeta customItemData = customItem.getItemMeta(); // 위에서 생성된 아이템의 데이터를 커스텀아이템데이터로 불러옴.
+    public void createCustomItem(Player player, String command, String job) {
+        ItemStack customItem = new ItemStack(Material.ENCHANTED_BOOK); // Create a custom item as an enchanted book
+        ItemMeta customItemData = customItem.getItemMeta(); // Load the item's data into custom item data.
         String jobColor = "";
 
-        // setDisplayName으로 아이템 이름 설정
-        if (command.equals("광부")) {
+        // Set item name with setDisplayName
+        if (command.equals("Miner")) {
             jobColor = "&7&l";
         }
-        customItemData.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&e&l[전직] " + "&r" + jobColor + command + " " + job));
-        // 커스텀아이템데이터 설명을 저장할 리스트를 추가함으로써 기존의 아이템 설명을 덮어씀.
-        // 즉, 커스텀아이템데이터의 새로운 설명을 저장하는 게 customItemExplain임.
+        customItemData.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&e&l[Job Change] " + "&r" + jobColor + command + " " + job));
+
+        // Add a list to store the lore of the custom item, overwriting existing lore.
+        // The new lore of the custom item is stored in customItemExplain.
         List<String> customItemExplain = new ArrayList<>();
-        customItemExplain.add(ChatColor.RESET + "" + ChatColor.DARK_PURPLE + command + " " + job + "로 전직합니다.");
-        customItemData.setLore(customItemExplain); // 커스텀아이템데이터에 커스텀아이템설명을 설정(아직 커스텀 아이템에 커스텀한 설명을 저장 안함)
-        customItem.setItemMeta(customItemData); // 커스텀아이템에 커스텀아이템데이터에 저장된 값을 설정함.
-        player.getInventory().addItem(customItem); // 플레이어 인벤토리에 커스텀 아이템 지급
+        customItemExplain.add(ChatColor.RESET + "" + ChatColor.DARK_PURPLE + "Change job to " + command + " " + job + ".");
+        customItemData.setLore(customItemExplain); // Set custom item lore in custom item data (not yet saved to custom item).
+        customItem.setItemMeta(customItemData); // Set the values stored in custom item data to the custom item.
+        player.getInventory().addItem(customItem); // Give the custom item to the player's inventory
     }
 
     public void giveCustomItemToPlayer(Player player, ItemStack item) {
         if (player.getInventory().firstEmpty() == -1) {
-            // 인벤토리가 가득 찼을 경우
+            // If the inventory is full
             player.getWorld().dropItem(player.getLocation(), item);
-            player.sendMessage(ChatColor.RED + "인벤토리가 가득 차서 아이템이 바닥에 떨어졌습니다!");
+            player.sendMessage(ChatColor.RED + "Your inventory is full, so the item was dropped on the ground!");
         } else {
-            // 인벤토리에 공간이 있을 경우
+            // If there is space in the inventory
             player.getInventory().addItem(item);
         }
     }

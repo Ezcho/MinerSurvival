@@ -20,22 +20,22 @@ public class PlayerScoreboardManager {
         FileConfiguration config = plugin.getConfig();
         ScoreboardManager manager = Bukkit.getScoreboardManager();
         scoreboard = manager.getNewScoreboard();
-        objective = scoreboard.registerNewObjective("1", "dummy", ChatColor.BOLD + "플레이어 정보");
+        objective = scoreboard.registerNewObjective("1", "dummy", ChatColor.BOLD + "Player Info");
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
 
         String playerName = config.getString("users." + player.getUniqueId().toString() + ".name", player.getName());
 
-        Score nameScore = objective.getScore(ChatColor.translateAlternateColorCodes('&',"&l이름 : " + ChatColor.YELLOW + "&l" + playerName));
+        Score nameScore = objective.getScore(ChatColor.translateAlternateColorCodes('&', "&lName: " + ChatColor.YELLOW + "&l" + playerName));
         nameScore.setScore(3);
 
-        String job = config.getString("users." + player.getUniqueId().toString() + ".job", "광부");
-        String level = config.getString("users." + player.getUniqueId().toString() + ".level", "1차");
-        Score jobScore = objective.getScore(ChatColor.BOLD + "직업 : " + job + " " + level);
+        String job = config.getString("users." + player.getUniqueId().toString() + ".job", "Miner");
+        String level = config.getString("users." + player.getUniqueId().toString() + ".level", "1st Class");
+        Score jobScore = objective.getScore(ChatColor.BOLD + "Job: " + job + " " + level);
         jobScore.setScore(2);
 
         double balance = config.getDouble("users." + player.getUniqueId().toString() + ".economy", 0.0);
         int roundedBalance = (int) balance;
-        Score moneyScore = objective.getScore(ChatColor.translateAlternateColorCodes('&', "&l돈 : " + ChatColor.YELLOW + roundedBalance + "&l원"));
+        Score moneyScore = objective.getScore(ChatColor.translateAlternateColorCodes('&', "&lMoney: " + ChatColor.YELLOW + roundedBalance + "&l coins"));
         moneyScore.setScore(1);
 
         player.setScoreboard(scoreboard);
